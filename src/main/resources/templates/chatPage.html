@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .sender {
+            position: fixed;
+            bottom: 0;
+        }
+    </style>
+</head>
+<body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.0/sockjs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
+<p th:text="${user2}"></p>
+<div th:each="message : ${messages}">
+    <p th:text="${message.username}"></p>
+    <p th:text="${message.text}"></p>
+    <br>
+</div>
+<div id="chat"></div>
+<div class="sender">
+    <input id="message" type="text">
+    <button onclick="sendMessage()">Send</button>
+</div>
+<script>
+    var stompClient = null;
+    const currentUrl = window.location.pathname.split("/");
+    const arg = currentUrl[currentUrl.length-1];
+    function connect() {
+        var socket = new SockJS('/chat'); // Подключение к WebSocket
+        stompClient = Stomp.over(socket);
+        stompClient.connect({}, function (frame) {
+            stompClient.subscribe('/chatPage/'+arg, function (message) {
+                showMessage(JSON.parse(message.body));
+            });
+        });
+    }
+
+    function sendMessage() {
+        var message = document.getElementById('message').value;
+        var message1 = {
+            text: message
+        }
+        stompClient.send("/chat/chatPage/"+arg, {}, JSON.stringify(message1)); // Отправка сообщения
+    }
+
+    function showMessage(message) {
+        var messagesDiv = document.getElementById('chat');
+        messagesDiv.innerHTML += "<div> <p>"+ message.username +"</p><p>"+ message.text + "</p><br></div>"; // Отображение сообщения
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+    window.scrollTo(0, document.body.scrollHeight);
+    connect(); // Установить соединение при загрузке страницы
+</script>
+</body>
+</html>

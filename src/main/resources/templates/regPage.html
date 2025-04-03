@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Registration</title>
+</head>
+<body  th:object="${user}">
+    <div>
+        <form method="post">
+            <input min="2" max="30" th:field="*{username}">
+            <input min="5" max="30" th:field="*{pass}">
+            <input type="email" th:field="*{email}">
+            <button type="submit">Submit</button>
+        </form>
+        <p th:text="${validation}"></p>
+    </div>
+</body>
+</html>

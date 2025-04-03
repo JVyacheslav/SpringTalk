@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Главная страница</title>
+</head>
+<body th:object="${user}">
+    <div th:if="${user.auth}">
+        <div th:each="user1 : ${users}">
+            <form th:action="'chatPage/'+${user1.usersId}" method="get">
+                <p th:text="${user1.username}"></p>
+                <button type="submit">Написать</button>
+            </form>
+        </div>
+    </div>
+    <div th:unless="${user.auth}">
+        <form action="regPage">
+            <button type="submit">Зарегистрироваться</button>
+        </form>
+        <form action="authPage">
+            <button type="submit">Авторизоваться</button>
+        </form>
+    </div>
+</body>
+</html>

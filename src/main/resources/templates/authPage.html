@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form method="post">
+    <p>Your username:</p>
+    <input th:field="*{user.username}" placeholder="Username">
+    <p>Your password:</p>
+    <input th:field="*{user.pass}" placeholder="Password">
+    <button type="submit">Submit</button>
+</form>
+<p th:text="${validation}"></p>
+<form action="/authPage/emailAuth">
+    <button>Forgot password?</button>
+</form>
+</body>
+</html>
