@@ -1,0 +1,16 @@
+.regAndAuth{
+    text-align: center;
+}
+.logOut{
+    text-align: end;
+    position: static;
+}
+.image{
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    border-radius: 30%;
+}
+.welcomeText{
+    text-align: center;
+}

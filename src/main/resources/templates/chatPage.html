@@ -2,34 +2,74 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-    <style>
-        .sender {
-            position: fixed;
-            bottom: 0;
-        }
-    </style>
+    <title>Chat</title>
+    <link th:href="@{/styles/styles.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/styles/chatPageStyles.css}" rel="stylesheet" type="text/css">
+<!--    Uncomment if you want to test the design without enabling the app.-->
+<!--    <link href="../static/styles/styles.css" rel="stylesheet" type="text/css">-->
+<!--    <link href="../static/styles/chatPageStyles.css" rel="stylesheet" type="text/css">-->
 </head>
 <body>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.0/sockjs.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
-<p th:text="${user2}"></p>
-<div th:each="message : ${messages}">
-    <p th:text="${message.username}"></p>
-    <p th:text="${message.text}"></p>
-    <br>
+<div class="chatPag">
+    <div class='chat' id="chat">
+        <div th:each="message : ${messages}">
+            <div th:id="${message.messageId}">
+                <p th:text="${message.username}"></p>
+                <p th:text="${message.text}"></p>
+                <div th:if="${message.attachment}">
+                    <img th:src="'data:image/png;base64,'+${message.img}">
+                </div>
+                <br>
+                <button th:onclick="'deleteMessage('+${message.messageId}+')'">Delete</button>
+                <br>
+            </div>
+        </div>
+    </div>
+    <div class="sender">
+        <input id="message" type="text">
+        <input id="attachment" type="file" accept="image/png">
+        <button onclick="sendMessage()">Send</button>
+    </div>
 </div>
-<div id="chat"></div>
-<div class="sender">
-    <input id="message" type="text">
-    <button onclick="sendMessage()">Send</button>
+<div class="emoji">
+    <ul>
+        <button onclick="updateInputField('👍')" class="emojiButton">👍</button>
+        <br>
+        <button onclick="updateInputField('☠️')" class="emojiButton">☠️</button>
+        <br>
+        <button onclick="updateInputField('👋')" class="emojiButton">👋</button>
+        <br>
+        <button onclick="updateInputField('❤️')" class="emojiButton">❤️</button>
+        <br>
+        <button onclick="updateInputField('😭')" class="emojiButton">😭</button>
+        <br>
+        <button onclick="updateInputField('😡')" class="emojiButton">😡</button>
+        <br>
+        <button onclick="updateInputField('😱')" class="emojiButton">😱</button>
+        <br>
+        <button onclick="updateInputField('😎')" class="emojiButton">😎</button>
+        <br>
+        <button onclick="updateInputField('🤓')" class="emojiButton">🤓</button>
+        <br>
+        <button onclick="updateInputField('😈')" class="emojiButton">😈</button>
+        <br>
+        <button onclick="updateInputField('💩')" class="emojiButton">💩</button>
+        <br>
+        <button onclick="updateInputField('🤡')" class="emojiButton">🤡</button>
+
+    </ul>
 </div>
+
 <script>
     var stompClient = null;
     const currentUrl = window.location.pathname.split("/");
     const arg = currentUrl[currentUrl.length-1];
     function connect() {
-        var socket = new SockJS('/chat'); // Подключение к WebSocket
+        //connects to server websockets
+        var socket = new SockJS('/chat');
         stompClient = Stomp.over(socket);
         stompClient.connect({}, function (frame) {
             stompClient.subscribe('/chatPage/'+arg, function (message) {
@@ -39,20 +79,69 @@
     }
 
     function sendMessage() {
+        //Sends a message to the server with the type "save"
         var message = document.getElementById('message').value;
-        var message1 = {
-            text: message
+        var attachmentFile = document.querySelector('input[type=file]')['files'][0];
+        var attachmentString = "";
+        let reader = new FileReader();
+        reader.onload = function(){
+            attachmentString = reader.result.replace("data:", "")
+                                            .replace(/^.+,/, "");
+            var message1 = {
+                content: message,
+                attachment: attachmentString,
+                type: "save"
+            }
+            stompClient.send("/chat/chatPage/"+arg, {}, JSON.stringify(message1));
         }
-        stompClient.send("/chat/chatPage/"+arg, {}, JSON.stringify(message1)); // Отправка сообщения
+        if(attachmentFile){
+            reader.readAsDataURL(attachmentFile);
+        } else{
+            var message1 = {
+                content: message,
+                attachment: null,
+                type: "save"
+            }
+            stompClient.send("/chat/chatPage/"+arg, {}, JSON.stringify(message1));
+        }
+        updateInputField(null);
     }
 
     function showMessage(message) {
         var messagesDiv = document.getElementById('chat');
-        messagesDiv.innerHTML += "<div> <p>"+ message.username +"</p><p>"+ message.text + "</p><br></div>"; // Отображение сообщения
+        //when receiving messages changes the html page
+        if(message.type === "save"){
+            if(message.attachment){
+                messagesDiv.innerHTML += "<div id=\""+ message.messageId +"\"> <p>"+ message.username +"</p><p>"+ message.text + "</p><img src=\"data:image/png;base64,"+message.img+"\"><br><button onclick=deleteMessage(\""+ message.messageId +"\")>Delete</button><br></div>";
+            } else{
+                messagesDiv.innerHTML += "<div id=\""+ message.messageId +"\"> <p>"+ message.username +"</p><p>"+ message.text + "</p><br><button onclick=deleteMessage(\""+ message.messageId +"\")>Delete</button><br></div>"; // Отображение сообщения
+            }
+        } else if(message.type === "delete"){
+            document.getElementById(message.content).remove();
+        }
+        //Moves chat down when changing html page
         window.scrollTo(0, document.body.scrollHeight);
     }
+    function deleteMessage(id){
+        //Sends a message to the server with the type "delete"
+        var deletedMessage = {
+            content: id,
+            attachment: null,
+            type: "delete"
+        }
+        stompClient.send("/chat/chatPage/"+arg, {}, JSON.stringify(deletedMessage));
+    }
+    function updateInputField(str){
+        //updates the input field
+        if(str != null){
+            document.getElementById('message').value = document.getElementById('message').value+str;
+        } else{
+            document.getElementById('message').value = "";
+            document.getElementById('attachment').value = "";
+        }
+    }
     window.scrollTo(0, document.body.scrollHeight);
-    connect(); // Установить соединение при загрузке страницы
+    connect();
 </script>
 </body>
 </html>

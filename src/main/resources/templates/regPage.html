@@ -3,16 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <title>Registration</title>
+    <link th:href="@{/styles/styles.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/styles/regPageStyle.css}" rel="stylesheet" type="text/css">
+<!--    Uncomment if you want to test the design without enabling the app.-->
+<!--    <link href="../static/styles/regPageStyle.css" rel="stylesheet" type="text/css">-->
+<!--    <link href="../static/styles/styles.css" rel="stylesheet" type="text/css">-->
 </head>
 <body  th:object="${user}">
-    <div>
+<h2>Registration</h2>
+    <div class="form">
         <form method="post">
-            <input min="2" max="30" th:field="*{username}">
-            <input min="5" max="30" th:field="*{pass}">
+            <p>Type your name</p>
+            <input th:field="*{username}">
+            <p>Type your password</p>
+            <input  th:field="*{pass}">
+            <p>Type your email</p>
             <input type="email" th:field="*{email}">
+            <br>
+            <br>
             <button type="submit">Submit</button>
         </form>
-        <p th:text="${validation}"></p>
+        <div id="valid" th:each="reason : ${validation}">
+            <p th:text="${reason}"></p>
+        </div>
+        <p th:text="${emailValidation}"></p>
     </div>
 </body>
 </html>

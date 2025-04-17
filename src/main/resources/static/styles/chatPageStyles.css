@@ -1,0 +1,41 @@
+.emoji{
+    position: fixed;
+    right: 0px;
+    top: 0px;
+}
+.emojiButton{
+    width: 50px;
+    height: 50px;
+}
+img{
+    max-width: 600px;
+    max-height: 800px;
+}
+input{
+    width: 30%;
+    height: 50px;
+}
+p{
+    font-size: x-large;
+}
+.chatPage {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.chat {
+    flex: 1;
+    overflow-y: scroll;
+    padding-bottom: 70px;
+}
+.sender {
+    display: flex;
+    left: 0;
+    width: 100%;
+    box-sizing: border-box;
+    position: fixed;
+    bottom: 0;
+    padding: 10px;
+    background-color: gray;
+}

@@ -19,8 +19,14 @@ public class Message {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int messageId;
-    @Column
+    @Column(length = 30)
     private String username;
-    @Column(name = "message")
+    @Column(name = "message" , length = 8000)
     private String text;
+    @Column
+    private boolean attachment;
+    @Transient
+    private String type = "save";
+    @Transient
+    private String img;
 }

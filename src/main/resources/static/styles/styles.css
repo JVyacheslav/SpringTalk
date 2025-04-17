@@ -1,0 +1,21 @@
+h2{
+    color: orange;
+    text-align: center;
+}
+button{
+    background-color: rgb(3, 4, 54);
+    color: white;
+    border-color: orange;
+    border-radius: 20%;
+    border-width: 5px;
+    width: 35%;
+    height: 50px;
+    font-size: larger;
+}
+body{
+    background-color: rgb(3, 4, 54);
+}
+p{
+    font-size: larger;
+    color: white;
+}

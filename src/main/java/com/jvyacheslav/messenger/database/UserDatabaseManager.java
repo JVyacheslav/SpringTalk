@@ -1,12 +1,12 @@
 package com.jvyacheslav.messenger.database;
 
 import com.jvyacheslav.messenger.dto.User;
-import com.jvyacheslav.messenger.interfaces.UserRepository;
+import com.jvyacheslav.messenger.interfaces.database_repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
+//methods for working with the database users
 @Service
 public class UserDatabaseManager {
     @Autowired

@@ -1,4 +1,4 @@
-package com.jvyacheslav.messenger.controllers;
+package com.jvyacheslav.messenger.controllers.authentication;
 
 
 import com.jvyacheslav.messenger.database.UserDatabaseManager;
@@ -24,9 +24,11 @@ public class PasswordAuthentication {
     }
     @PostMapping
     public String getForm(@ModelAttribute User user, Model model){
+        //checks the user's data for a match in the database, if everything is OK - authenticates the user
         User realUser = userDatabaseManager.findByUsernameAndPass(user.getUsername(), user.getPass());
         if(realUser != null){
             user.setEmail(realUser.getEmail());
+            user.setId(realUser.getId());
             user.setAuth(true);
             return "redirect:/";
         } else{

@@ -1,24 +1,42 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <title>Главная страница</title>
+    <title>Main Page</title>
+    <link th:href="@{/styles/styles.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/styles/mainPageStyle.css}" rel="stylesheet" type="text/css">
+    <link rel="icon" th:href="@{/styles/images/logo.png}" type="image/x-icon">
+    <!--    Uncomment if you want to test the design without enabling the app.-->
+    <!--    <link href="../static/styles/mainPageStyle.css" rel="stylesheet" type="text/css">-->
+    <!--    <link href="../static/styles/styles.css" rel="stylesheet" type="text/css">-->
 </head>
 <body th:object="${user}">
+<h2>Welcome!</h2>
     <div th:if="${user.auth}">
+        <div>
+            <form th:action="${generalChat}" method="get">
+                <p>General Chat</p>
+                <button type="submit">Write</button>
+            </form>
+        </div>
         <div th:each="user1 : ${users}">
             <form th:action="'chatPage/'+${user1.usersId}" method="get">
                 <p th:text="${user1.username}"></p>
-                <button type="submit">Написать</button>
+                <button type="submit">Write</button>
             </form>
         </div>
+        <form class="logOut" method="post">
+            <button>Log Out</button>
+        </form>
     </div>
     <div th:unless="${user.auth}">
-        <form action="regPage">
-            <button type="submit">Зарегистрироваться</button>
+        <p class="welcomeText">Welcome to the SpringTalk system - a web messenger with a set of all the necessary functions for comfortable communication.</p>
+        <form class="regAndAuth" action="regPage">
+            <button type="submit">Register</button>
         </form>
-        <form action="authPage">
-            <button type="submit">Авторизоваться</button>
+        <form class="regAndAuth" action="authPage">
+            <button type="submit">Log in</button>
         </form>
     </div>
+    <img class="image" th:src="@{/styles/images/logo.png}">
 </body>
 </html>

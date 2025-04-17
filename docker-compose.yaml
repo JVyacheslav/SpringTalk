@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/messenger
+      SPRING_DATASOURCE_USERNAME: JVyacheslav
+      SPRING_DATASOURCE_PASSWORD: kOWsDO
+    depends_on:
+      - db
+
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: messenger
+      POSTGRES_USER: JVyacheslav
+      POSTGRES_PASSWORD: kOWsDO
+    ports:
+      - "5433:5432"
