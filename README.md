@@ -79,7 +79,7 @@ password: 12345678
 
 ## After turning on the application, just go to http://localhost:8080/
 ___
-## 3. Finally, you can run the application in your IDE or use the following commands in the terminal:
+## 3. Finally, you can run the application use the following commands in the terminal:
 ```bash
 sudo apt install maven
 
