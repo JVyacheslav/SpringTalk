@@ -21,8 +21,6 @@ public class EmailSettings {
         emailProperties.put("mail.smtp.starttls.enable", "true");
         emailProperties.put("mail.smtp.ssl.enable", "true");
         emailProperties.put("mail.smtp.auth", "true");
-        emailProperties.put("mail.smtp.starttls.required", "true");
-        emailProperties.put("mail.smtp.ssl.protocols", "TLSv1.2");
 
     }
     protected Session openEmailSenderSession() throws MessagingException {
